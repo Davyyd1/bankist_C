@@ -74,27 +74,44 @@ const displayMovements = function (movements) {
 };
 displayMovements(account1.movements);
 
-const calcDisplayBalance = function(movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0)
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumIn.textContent = `${incomes} €`;
+
+  const outcomes = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  labelSumOut.textContent = `${Math.abs(outcomes)} €`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(cur => (cur * 1.2) / 100)
+    .filter((int, i, arr) => {console.log(arr)
+    return int >= 1})
+    .reduce((acc, cur) => acc + cur);
+  labelSumInterest.textContent = `${interest} €`;
+};
+calcDisplaySummary(account1.movements);
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
   labelBalance.textContent = `${balance} EUR`;
-}
+};
 calcDisplayBalance(account1.movements);
 
-
 const user = 'Steven Thomas Williams'; // username : stw
-const createUsernames = function(accs) {
-  accs.forEach(function(acc) {
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
     acc.username = acc.owner
-    .toLowerCase()
-    .split(' ')
-    .map(name =>
-      name.at(0)
-    ).join('');
-  })
-}
+      .toLowerCase()
+      .split(' ')
+      .map(name => name.at(0))
+      .join('');
+  });
+};
 createUsernames(accounts);
-
-
 
 // console.log(containerMovements.innerHTML);
 
@@ -177,34 +194,45 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // )
 // console.log(movementsDescriptions);
 
-const deposits = movements.filter(function(mov) {
-  return mov > 0;
-})
-console.log(movements);
-console.log(deposits);
+// const deposits = movements.filter(function(mov) {
+//   return mov > 0;
+// })
+// console.log(movements);
+// console.log(deposits);
 
-const depositsFor =[];
-for ( const mov of movements ) if (mov > 0) depositsFor.push(mov) 
-console.log(depositsFor);
+// const depositsFor =[];
+// for ( const mov of movements ) if (mov > 0) depositsFor.push(mov)
+// console.log(depositsFor);
 
-const withdrawals = movements.filter((mov) => mov < 0)
-console.log(withdrawals);
+// const withdrawals = movements.filter((mov) => mov < 0)
+// console.log(withdrawals);
 
-//accumulator -> snowball
-const balance = movements.reduce((acc, curr, i, arr) => acc + curr, 0);
-console.log(
-  balance
-);
+// //accumulator -> snowball
+// const balance = movements.reduce((acc, curr, i, arr) => acc + curr, 0);
+// console.log(
+//   balance
+// );
 
-let balance2 = 0;
-for(const mov of movements) balance2 += mov;
-console.log(balance2);
+// let balance2 = 0;
+// for(const mov of movements) balance2 += mov;
+// console.log(balance2);
 
-//Maximum value
-const max = movements.reduce((acc, mov) => {
-  if(acc > mov)
-    return acc;
-  else(mov > acc)
-    return mov
-}, movements[0]);
-console.log(max);
+// //Maximum value
+// const max = movements.reduce((acc, mov) => {
+//   if(acc > mov)
+//     return acc;
+//   else(mov > acc)
+//     return mov
+// }, movements[0]);
+// console.log(max);
+
+// const totalDepositsUSD = movements
+//   .filter(mov => mov > 0)
+//   // .map(mov => mov * 1.1)
+//   .map((mov,i,arr) => {
+//     console.log(arr);
+//     mov * 1.1
+//   })
+//   .reduce((acc, cur) => acc + cur, 0);
+
+// console.log(totalDepositsUSD);
