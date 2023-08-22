@@ -117,6 +117,8 @@ createUsernames(accounts);
 const updateUI = function (acc) {
   //display balance
   displayMovements(acc.movements);
+  
+  // displayMovements(acc.movements);
 
   //display summary
   calcDisplayBalance(acc);
@@ -170,6 +172,21 @@ btnTransfer.addEventListener('click', function (e) {
     updateUI(currentAccount);
   }
 });
+
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+  // console.log(currentAccount);
+  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+
+  }
+  inputLoanAmount.value = '';
+});
+
+
 
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
@@ -331,3 +348,9 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // }
 
 // console.log(account);
+
+console.log(movements);
+console.log(movements.includes(-130));
+
+const anyDeposits = movements.some(mov => mov > 5000);
+console.log(anyDeposits);
