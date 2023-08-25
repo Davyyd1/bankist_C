@@ -61,9 +61,13 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
+
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+
+  const movs = sort ? movements.slice().sort((a,b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `<div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
@@ -136,7 +140,7 @@ btnLogin.addEventListener('click', function (e) {
     acc => acc.username === inputLoginUsername.value
   );
   console.log(currentAccount);
-
+  
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     //display ui and message
     labelWelcome.textContent = `Welcome ${currentAccount.owner}`;
@@ -210,6 +214,13 @@ btnClose.addEventListener('click', function (e) {
   }
   inputCloseUsername.value = inputClosePin.value = '';
 });
+
+let sorted = false;
+btnSort.addEventListener('click', function(e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+})
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -349,8 +360,55 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 // console.log(account);
 
-console.log(movements);
-console.log(movements.includes(-130));
+// console.log(movements);
+// console.log(movements.includes(-130));
 
-const anyDeposits = movements.some(mov => mov > 5000);
-console.log(anyDeposits);
+// const anyDeposits = movements.some(mov => mov > 5000);
+// console.log(anyDeposits);
+
+// const arr = [[1,2,3], [4,5,6], 7,8];
+// // console.log(arr.flat());
+
+// const arrDeep = [[[1,2],3], [4,[5,6]], 7,8];
+// // console.log(arrDeep.flat(2));
+
+// const accountMovements = accounts.map(acc => acc.movements);
+
+
+// const allMovements = accountMovements.flat();
+// console.log(allMovements);
+
+// //flat
+// const overalBalance = accounts.map(acc=> acc.movements).flat().reduce((acc, mov) => acc + mov, 0);
+// console.log(overalBalance);
+
+// //flatmap
+// const overalBalance1 = accounts.flatMap(acc=> acc.movements).reduce((acc, mov) => acc + mov, 0);
+// console.log(overalBalance1);
+
+// //strings
+// const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+// // console.log(owners.sort());
+
+// //numbers
+// console.log(movements);
+// // console.log(movements.sort());
+
+
+// movements.sort((a,b) => a-b);
+// console.log(movements);
+// const x = function (mov){
+//   for(let i = 0; i<mov.length; i++){
+//     for(let j = 0; j<mov.length; j++){
+//       if(mov[j] > mov[j+1]) 
+//       {
+//         let temp = mov[j];
+//         mov[j] = mov[j+1];
+//         mov[j+1] = temp;
+//       }
+//     }
+//   }
+//   console.log(mov);
+// }
+
+// x(movements)
