@@ -62,10 +62,9 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 const displayMovements = function (movements, sort = false) {
-
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a,b) => a - b) : movements;
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
@@ -121,7 +120,7 @@ createUsernames(accounts);
 const updateUI = function (acc) {
   //display balance
   displayMovements(acc.movements);
-  
+
   // displayMovements(acc.movements);
 
   //display summary
@@ -140,7 +139,7 @@ btnLogin.addEventListener('click', function (e) {
     acc => acc.username === inputLoginUsername.value
   );
   console.log(currentAccount);
-  
+
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     //display ui and message
     labelWelcome.textContent = `Welcome ${currentAccount.owner}`;
@@ -177,20 +176,17 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
-btnLoan.addEventListener('click', function(e){
+btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
   const amount = Number(inputLoanAmount.value);
   // console.log(currentAccount);
-  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     currentAccount.movements.push(amount);
     updateUI(currentAccount);
-
   }
   inputLoanAmount.value = '';
 });
-
-
 
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
@@ -216,11 +212,11 @@ btnClose.addEventListener('click', function (e) {
 });
 
 let sorted = false;
-btnSort.addEventListener('click', function(e) {
+btnSort.addEventListener('click', function (e) {
   e.preventDefault();
   displayMovements(currentAccount.movements, !sorted);
   sorted = !sorted;
-})
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -374,7 +370,6 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 // const accountMovements = accounts.map(acc => acc.movements);
 
-
 // const allMovements = accountMovements.flat();
 // console.log(allMovements);
 
@@ -394,13 +389,12 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // console.log(movements);
 // // console.log(movements.sort());
 
-
 // movements.sort((a,b) => a-b);
 // console.log(movements);
 // const x = function (mov){
 //   for(let i = 0; i<mov.length; i++){
 //     for(let j = 0; j<mov.length; j++){
-//       if(mov[j] > mov[j+1]) 
+//       if(mov[j] > mov[j+1])
 //       {
 //         let temp = mov[j];
 //         mov[j] = mov[j+1];
@@ -413,15 +407,25 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 // x(movements)
 
-const y = Array.from({length:7}, () => 1);
-console.log(y);
+// const y = Array.from({length:7}, () => 1);
+// console.log(y);
 
-const z = Array.from({length: 7}, (cur, i) => i+1)
-console.log(z);
+// const z = Array.from({length: 7}, (cur, i) => i+1)
+// console.log(z);
+
+// labelBalance.addEventListener('click', function() {
+//   const movementsUI = Array.from(document.querySelectorAll('.movements__value'), el =>Number(el.textContent.replace('EUR', '')));
+//   console.log(movementsUI);
+// })
+
+// ex. 1
+const bankDepositSum = accounts
+  .flatMap(accs => accs.movements)
+  .filter(mov => mov > 0)
+  .reduce((acc, cur) => acc + cur);
+console.log(`All deposits in bank ${bankDepositSum} EUR`);
 
 
-
-labelBalance.addEventListener('click', function() {
-  const movementsUI = Array.from(document.querySelectorAll('.movements__value'), el =>Number(el.textContent.replace('EUR', '')));
-  console.log(movementsUI);
-})
+// ex. 2
+const numDeposits1000 = accounts.flatMap(accs => accs.movements).filter(mov => mov > 1000).length;
+console.log(numDeposits1000);
