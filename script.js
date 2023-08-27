@@ -412,3 +412,16 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // }
 
 // x(movements)
+
+const y = Array.from({length:7}, () => 1);
+console.log(y);
+
+const z = Array.from({length: 7}, (cur, i) => i+1)
+console.log(z);
+
+
+
+labelBalance.addEventListener('click', function() {
+  const movementsUI = Array.from(document.querySelectorAll('.movements__value'), el =>Number(el.textContent.replace('EUR', '')));
+  console.log(movementsUI);
+})
