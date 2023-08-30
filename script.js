@@ -144,6 +144,14 @@ const updateUI = function (acc) {
 // event handler
 let currentAccount;
 
+//fake always logged in
+currentAccount = account1;
+updateUI(currentAccount)
+containerApp.style.opacity = 100;
+
+const now = new Date();
+labelDate.textContent = now;
+
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
 
@@ -479,15 +487,15 @@ labelBalance.addEventListener('click', function(){
 
 // console.log(new Date(0));
 
-console.log(new Date(3 * 24 * 60 * 60 * 1000));
+// console.log(new Date(3 * 24 * 60 * 60 * 1000));
 
-//working with dates
-const future = new Date(2037, 10, 19, 15, 23);
-console.log(future);
-console.log(future.getFullYear());
-console.log(future.getMonth());
-console.log(future.getDate());
-console.log(future.getHours());
-console.log(future.getMinutes());
-console.log(future.getSeconds());
-console.log(future.toISOString());
+// //working with dates
+// const future = new Date(2037, 10, 19, 15, 23);
+// console.log(future);
+// console.log(future.getFullYear());
+// console.log(future.getMonth());
+// console.log(future.getDate());
+// console.log(future.getHours());
+// console.log(future.getMinutes());
+// console.log(future.getSeconds());
+// console.log(future.toISOString());
