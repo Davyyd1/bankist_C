@@ -73,6 +73,16 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+
+const formatMovementDate = function(date) {
+  const calcDaysPassed = (date1, date2) => Math.abs(date2-date1)/(1000 * 60 * 60 * 24);
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+    
+}
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
@@ -80,13 +90,9 @@ const displayMovements = function (acc, sort = false) {
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
-
-    const date = new Date(acc.movementsDates[i]);
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    const displayDate = `${day}/${month}/${year}`
     
+    const date = new Date(acc.movementsDates[i]);
+    const displayDate = formatMovementDate(date);
     labelDate.textContent = day+'.'+month+'.'+year;
     const html = `<div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
@@ -154,9 +160,9 @@ const updateUI = function (acc) {
 let currentAccount;
 
 //fake always logged in
-currentAccount = account1;
-updateUI(currentAccount)
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount)
+// containerApp.style.opacity = 100;
 
 const date = new Date();
 const day = `${date.getDate()}`.padStart(2, 0);
