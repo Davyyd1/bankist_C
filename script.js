@@ -73,16 +73,15 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-
 const formatMovementDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
   const daysPassed = calcDaysPassed(new Date(), date);
-  console.log(daysPassed);
+  // console.log(daysPassed);
 
-  if (daysPassed === 0) return "Today";
-  if (daysPassed === 1) return "Yesterday";
+  if (daysPassed === 0) return 'Today';
+  if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
 
   // const day = `${date.getDate()}`.padStart(2, 0);
@@ -94,7 +93,7 @@ const formatMovementDate = function (date, locale) {
 
 const formatCur = function (value, locale, currency) {
   return new Intl.NumberFormat(locale, {
-    style: "currency",
+    style: 'currency',
     currency: currency,
   }).format(value);
 };
@@ -102,14 +101,16 @@ const formatCur = function (value, locale, currency) {
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
-    
+
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovementDate(date);
-    labelDate.textContent = day+'.'+month+'.'+year;
+    labelDate.textContent = day + '.' + month + '.' + year;
     const html = `<div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">${displayDate}</div>
@@ -172,8 +173,35 @@ const updateUI = function (acc) {
   //display movements
   calcDisplaySummary(acc);
 };
+
+const startLogOutTimer = function () {
+  const tick = function () {
+    // in each call, print the remaining time to UI
+    const min = String(Math.trunc(time / 60)).padStart(2, '0');
+    const seconds = String(time % 60).padStart(2, '0');
+    labelTimer.textContent = `${min}:${seconds}`;
+
+    // When 0 seconds, stop timer and log out user
+    if (time == 0) {
+      clearInterval(timer);
+      containerApp.style.opacity = 0;
+      updateUI(currentAccount);
+    }
+
+    //decrease 1s
+    time--;
+  };
+  // set time
+  let time = 50;
+
+  // call the timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+
 // event handler
-let currentAccount;
+let currentAccount, timer;
 
 //fake always logged in
 // currentAccount = account1;
@@ -186,7 +214,7 @@ const month = date.getMonth();
 const year = date.getFullYear();
 const hour = date.getHours();
 const min = date.getMinutes();
-labelDate.textContent = day+'.'+month+'.'+year+` ${hour}:${min}`;
+labelDate.textContent = day + '.' + month + '.' + year + ` ${hour}:${min}`;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
@@ -194,7 +222,7 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
+  // console.log(currentAccount);
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     //display ui and message
@@ -205,6 +233,9 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
+    // timer
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
     updateUI(currentAccount);
   }
 });
@@ -233,8 +264,11 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movementsDates.push(new Date().toISOString());
     recieverAcc.movementsDates.push(new Date().toISOString());
 
-
     updateUI(currentAccount);
+
+    //reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -244,14 +278,18 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
   // console.log(currentAccount);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    setTimeout(function(){
+    setTimeout(function () {
       currentAccount.movements.push(amount);
 
       //add loan date
       currentAccount.movementsDates.push(new Date().toISOString());
-  
+
       updateUI(currentAccount);
-    },2500);
+
+      //reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -265,7 +303,7 @@ btnClose.addEventListener('click', function (e) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
     );
-    console.log(index);
+    // console.log(index);
 
     // .indexOf(23)
 
@@ -493,7 +531,6 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //   .reduce((acc, cur) => acc + cur);
 // console.log(`All deposits in bank ${bankDepositSum} EUR`);
 
-
 // // ex. 2
 // const numDeposits1000 = accounts.flatMap(accs => accs.movements).filter(mov => mov > 1000).length;
 // console.log(numDeposits1000);
@@ -509,17 +546,16 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 // console.log(Math.trunc(Math.random() * 6 ) + 1);
 
-const randomInt = (min,max) => Math.trunc(Math.random() * (max-min) +1);
+const randomInt = (min, max) => Math.trunc(Math.random() * (max - min) + 1);
 
-labelBalance.addEventListener('click', function(){
+labelBalance.addEventListener('click', function () {
   [...document.querySelectorAll('.movements__row')].forEach(function (row, i) {
     // 0,2,4,6
-    if (i % 2 === 0 ) row.style.backgroundColor = 'orangered';
+    if (i % 2 === 0) row.style.backgroundColor = 'orangered';
     if (i % 3 === 0) row.style.backgroundColor = 'blue';
     //0,3,6,9
-  })
-})
-
+  });
+});
 
 //create a date
 // const date = new Date();
@@ -550,7 +586,11 @@ labelBalance.addEventListener('click', function(){
 
 const ingredients = ['olives', 'spinach'];
 
-const pizzaTimer = setTimeout((ing1, ing2) => console.log(`here is your pizza with ${ing1} and ${ing2} 💶`),3000, ...ingredients); 
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => console.log(`here is your pizza with ${ing1} and ${ing2} 💶`),
+  3000,
+  ...ingredients
+);
 console.log('WAITING');
 
-if(ingredients.includes('spinach')) clearTimeout(pizzaTimer)
+if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);
